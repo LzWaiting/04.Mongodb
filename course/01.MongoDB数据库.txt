@@ -1,0 +1,79 @@
+MongoDB(芒果数据库--非关系型数据库)
+	
+	标签：非关系型数据库
+		 文档型数据库
+		 最像关系型的非关系型数据库
+	特点：1. 是由 c++ 编写的数据库管理系统
+		 2. 支持丰富的数据操作，增删改查索引聚合
+		 3. 支持丰富的数据类型
+		 4. 使用方便，可以很好的扩展，相对比较成熟
+		 5. 支持众多的编程语句接口(python PHP c++ c#)
+	MongoDB 的安装
+		>>>自动安装
+		sudo apt-get install mongodb
+		默认安装位置：/var/lib/mongodb
+		配置文件位置：/etc/mongodb.conf
+		命令集：/usr/bin		
+			  /usr/local/bin
+		>>>手动安装
+		1. 下载安装包
+			www.mongodb.com
+		2. 解压安装包
+			/usr/local	/opt
+		3. 将解压后的MongoDB文件夹中的bin目录添加到环境变量
+			PATH=$PATH:/opt/mongo.../bin
+			export PATH
+			将以上两句写入启动脚本	/etc/rc.local	避免每次都需要重新添加环境变量
+		4. 配置文件位置：/etc/mongodb.conf
+		5. 重启
+
+	MongoDB 命令
+		>设置数据库存储位置
+		mongod --dbpath	目录
+		
+		>设置数据库监听端口
+		mongod --port 8080
+		*默认监听端口27017
+
+		>进入数据库交互操作界面
+		mongo
+		mongo shell:用来操作mongodb数据库的界面，在这里可以使用mongo语句操作数据库内容
+
+		>退出mongo shell:quit() exit ctrl+c
+
+	MongoDB 组织结构
+		键值对 --> 文档（对象）--> 集合 --> 数据库
+
+	mysql 和 mongodb概念对比
+		mysql		mongodb 		含义
+		database	database		数据库
+		table		collection		表/集合
+		column		field			字段/域
+		row			document		记录/文档
+		index		index			索引
+
+	mongo 系统数据库说明
+		admin:存储用户信息
+		local：存储本地数据
+		config：存储分片信息
+
+	数据库的备份和恢复
+		备份命令：
+			$ mongodump -h host(地址) -d dbname(要备份的库) -o bak(备份后的目标路径)
+			e.g. $ mongodump -h 127.0.0.1 -d test -o bak	
+			# 将本机test数据库备份到bak目录下
+		恢复命令：
+			$ mongorestore -h dbhost:port -d dbname path
+			e.g. $ mongorestore -h 127.0.0.1:27017 -d res bak/test	
+			# 将本地bak/test数据库恢复到本机mongo数据库（res不存在自动创建）
+
+	数据库的监测
+		$ mongostat	监测数据库运行数据
+		每秒信息：
+		增次数	查次数 	改次数	删次数	和磁盘交互次数		虚拟内存		物理内存		时间
+		insert 	query 	update 	delete 	flushes 		vsize 		res    		time
+		*0     	*0    	*0     	*0     	0       		934M  		59.0M  		Mar 15 14:40:11.404
+
+		$ mongotop 监控数据库读写时长
+			ns    	total    	read    	write
+			数据表	总时间		读时间		些时间

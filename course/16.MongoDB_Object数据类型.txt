@@ -1,0 +1,12 @@
+Object(内部文档)
+
+	文档内部某个域的值还是一个文档数据，则这个文档就是内部文档类型数据
+		
+		* 通常使用 "外部文档域名.引用内部文档域名" 的方式使用内部文档
+		>>> db.class3.insert({name:'老舍',sex:'m',book:{title:'骆驼祥子',price:42.3}})
+		>>> db.class3.find({'book.title':'狂人日记'})		# 查找book为’狂人日记‘的信息
+		>>> db.class3.update({'book.title':'围城'},{$set:{'book.price':43.6}})	# 修改价格
+		
+		* 通过数组下标直接操作某一项(注意必须加上引号)
+		>>> db.class1.find({'score.0':{$gt:85}},{_id:0})
+		>>> db.class1.update({name:'阿哲'},{$set:{'score.2':80}})

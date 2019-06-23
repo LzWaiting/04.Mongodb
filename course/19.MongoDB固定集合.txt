@@ -1,0 +1,14 @@
+固定集合
+	mongodb中可以创建大小固定的集合，称之为固定集合
+	特点：能够淘汰早期数据
+		 插入和顺序查找速度更快
+		 可以控制集合的空间大小
+	使用：临时缓冲 日志处理
+
+	db.createCollection(collection,{capped:true,size:10000,max:1000})
+		功能：创建固定集合
+		参数：capped:true		表示创建固定集合
+			 size 			表示指定集合的大小 字节
+			 max			表示指定集合存放文档上限
+			 * 存储大小取size和max较小值，存储满即开始淘汰
+			 >>> db.createCollection('log',{capped:true,size:1000,max:3})			 

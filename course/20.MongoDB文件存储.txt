@@ -1,0 +1,43 @@
+文件存储
+
+	1. 存储文件路径
+		>>> db.log.insert({filename:'test.mp4',size:20,path:'/home/tarena/python/mydata/test.mp4'})
+		优点：节省数据库空间 操作简单快捷
+		缺点：当数据库或者文件位置发生变化时，需要修改数据库内容
+
+	2. 存储文件本身
+		将文件以二进制的形式存储到数据库中
+		优点：数据库在，文件就在，不会受到迁移等影响
+		缺点：占用数据库空间大，存取效率低
+
+		GridFS 存储大文件
+		大文件:在mongodb中认为 >16M 的文件为大文件
+		GridFS 方法
+			在mongodb中以两个集合配合的方法存储文件
+				fs.files:存储文件相关信息（文件名，文件类型）
+				fs.chunks:分块存储文件实际内容
+			
+		* 存储文件：
+			$ mongofiles -d dbname put file
+				dbname:要将文件存入的数据库，如果不存在自动创建
+				file:要保存的文件
+				e.g.$ mongofiles -d grid put syst.mp3
+		
+		* 提取文件：
+			$ mongofiles -d bdname get file
+				e.g.$ mongofiles -d grid get syst.mp3
+
+		* 优缺点：
+			优点：操作方便，提供较好的存储命令，使用数据库存储文件方便移植
+			缺点：读写效率低
+
+	游标 cursor
+		通过获取操作数据库的返回结果，得到返回结果对象
+		通过游标可以进一步获取操作结果数据
+
+		将返回结果赋给一个javascript变量，作为查找结果游标
+		var cursor = db.class0.find()
+		查看是否有下一个结果
+		cursor.hasNext()
+		获取下一个结果
+		cursor.next()

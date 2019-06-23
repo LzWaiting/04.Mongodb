@@ -1,0 +1,45 @@
+聚合操作
+
+	对文档的筛选结果进行整理统计
+	db.collection_name.aggregate()
+		功能：完成聚合操作
+		参数：聚合条件 --> 聚合操作符
+
+	聚合操作符
+	$group 分组聚合 需要配合具体的分组统计选项
+		$sum 求和
+			>>> db.class0.aggregate({$group:{_id:'$gender',num:{$sum:1}}})
+			表示根据gender分组，并对分组对象进行求和 $sum:1 (加1操作)
+			>>> db.class0.aggregate({$group:{_id:'$gender',age_sum:{$sum:'$age'}}})
+			表示根据gender分组，并对分组年龄求和
+		$avg 求平均数
+			>>> db.class0.aggregate({$group:{_id:'$gender',avg_age:{$avg:'$age'}}})
+			表示根据gender分组，并对分组年龄求平均值
+		$max 求最大值
+			>>> db.class0.aggregate({$group:{_id:'$gender',max_age:{$max:'$age'}}})
+			表示根据gender分组，并对分组年龄求最大值
+		$min 求最小值
+			>>> db.class0.aggregate({$group:{_id:'$gender',min_age:{$min:'$age'}}})
+			表示根据gender分组，并对分组年龄求最小值
+	$project 修改文档的显示效果
+		project值的用法和find函数的field格式一致
+		>>> db.class0.aggregate({$project:{_id:0,name:1,age:1}})
+			显示name和age
+		>>> db.class0.aggregate({$project:{_id:0,Name:'$name',Age:'$age'}})
+			显示指定域名
+	$match 数据筛选
+		$match值的用法同query一致
+		>>> db.class0.aggregate({$match:{age:{$gt:18}}})
+	$limit 筛选前几条文档
+		>>> db.class0.aggregate({$limit:3})
+	$skip 跳过几条文档显示
+		>>> db.class0.aggregate({$skip:3})
+	$sort 将数据排序
+		>>> db.class0.aggregate({$sort:{age:-1}})
+
+	聚合管道
+		聚合管道指的是将上一个聚合的操作结果给下一个聚合继续操作
+		db.collection_name.aggregate([{聚合},{},{}...])
+		>>> db.class0.aggregate([{$match:{gender:'m'}},{$project:{_id:0}},{$sort:{age:1}}])
+		>>> db.class0.aggregate([{$group:{_id:'$name',num:{$sum:1}}},{$match:{num:{$gt:1}}}])
+			找出同名的学生信息

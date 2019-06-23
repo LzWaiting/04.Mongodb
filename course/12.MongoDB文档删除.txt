@@ -1,0 +1,9 @@
+>>> 删除文档
+	db.collection_name.remove(query,justOne)
+		功能：删除文档
+		参数：query		用法同find
+			 justOne	布尔值，默认为false,表示删除所有符合条件的文档；设置为true,则表示只删除一条文档
+		>>> db.class1.find({sex:{$exists:false}},{_id:0})	# 删除所有不存在sex域的文档
+		>>> db.class1.remove({sex:'w'},true)				# 删除性别为'w'的第一条文档
+		>>> db.class0.remove({_id:{$not:{$type:7}}})		# 删除_id 不为ObjectId的所有文档
+		>>> db.class0.remove({})							# 删除class0中所有的文档

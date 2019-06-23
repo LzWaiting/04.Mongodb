@@ -1,0 +1,24 @@
+时间数据类型
+
+	mongo中存储时间大多为ISODate
+	存储当前时间方法
+		1. new Date() 自动生成当前时间
+			>>> db.class2.insert({book:'Python入门',date:new Date()})
+		2. ISODate() 自动生成当前时间
+			>>> db.class2.insert({book:'Python精通',date:ISODate()})
+		3. Date() 将系统时间转化为字符串
+			>>> db.class2.insert({book:'Python疯狂',date:Date()})
+	存储指定时间
+		ISODate()
+			功能：生成mongo标准时间类型数据
+			参数：如果不传参默认为当前时间
+				 传参表示指定时间(格式有以下几种)
+				 '2019-03-17 12:12:12'
+				 '20190317 12:12:12'
+				 '20190317'
+			>>> db.class2.insert({book:'Python高手',date:ISODate('2019-03-17 00:05:30')})
+
+	时间戳
+		valueOf()
+			功能：获取某个时间的时间戳
+			>>> db.class2.insert({book:'Python大神',date:ISODate().valueOf()})

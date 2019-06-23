@@ -1,0 +1,8 @@
+Null 类型
+	
+	值 null
+	作用：
+		1. 如果某个域存在却没有值可以赋值时，使用null
+			>>> db.class2.insert({book:'Python金童',price:null})
+		2. 可以查找某个域不存在的情况
+			>>> db.class2.find({date:null})

@@ -1,0 +1,23 @@
+文档操作
+
+	>>> 插入文档
+		db.collection_name.insert()
+			功能:插入一个文档
+			参数:要插入的文档
+			e.g.>>> db.class0.insert({'name':'Lucy','age':18,'sex':'w'})
+				>>> db.class0.insert({name:'Tom',age:17,sex:'m'})
+				>>> db.class0.insert({_id:1,name:'Jame',age:16,sex:'m'})
+				>>> db.class0.insert([{name:'Alex',age:19,sex:'m'},{name:'Abby',age:18,sex:'w'}])	# 插入多条文档
+			* 插入操作中键可以不加引号
+			* _id值可以自己插入,但是不能重复
+		db.collection_name.insertOne()
+			功能:插入一条文档
+		db.collection_name.insertMany([])
+			功能:插入多条文档
+		db.collection_name.save()
+			功能:插入文档
+			* 如果正常插入,与insert用法相同
+			* 如果插入数据时,有_id域值存在时,则会修改原有文档;如果该值不存在时则正常插入
+
+	>>> 获取集合对象方法
+		db.collection_name <==> db.getCollection('collection_name') 	# 等价

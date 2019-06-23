@@ -1,0 +1,27 @@
+逻辑运算符
+	
+	$and 逻辑与
+		e.g.查找小于18且为'm'性别
+		>>> db.class0.find({age:{$lt:18},sex:'m'},{_id:0})
+		>>> db.class0.find({$and:[{age:{$lt:18}},{sex:'m'}]},{_id:0})	# 等同于上面的
+		* 在query中，如果写多个条件默认为and关系
+
+	$or 逻辑或
+		e.g.查找小于18或大于19
+		>>> db.class0.find({$or:[{age:{$lt:18}},{age:{$gt:19}}]},{_id:0})
+
+	$not 逻辑非
+		e.g.查找性别不是男的
+		>>> db.class0.find({sex:{$not:{$eq:'m'}}},{_id:0})
+		>>> db.class0.find({sex:{$ne:'m'}},{_id:0})
+
+	$nor 既不也不 <==> not(a or b) <==> (not a)and(not b)
+		e.g.查找既不是'm'，也不小于18
+		>>> db.class0.find({$nor:[{sex:'m'},{age:{$lt:18}}]},{_id:0})
+
+	逻辑条件混合
+		e.g.年龄大于17岁 并且 为男生 或者 姓名叫 Abby
+		>>> db.class0.find({$or:[{$and:[{age:{$gt:17}},{sex:'m'}]},{name:'Abby'}]},{_id:0})
+		e.g.年龄不大于18 或者为女性，并且 姓名 大于 Lucy
+		>>> db.class0.find({$and:[{$or:[{age:{$not:{$gt:18}}},{sex:'w'}]},{name:{$gt:'Lucy'}}]},{_id:0})
+		>>> db.class0.find({$or:[{age:{$lte:18}},{sex:'w'}],name:{$gt:'Lucy'}},{_id:0})

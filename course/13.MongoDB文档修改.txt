@@ -1,0 +1,76 @@
+>>> 修改文档
+	db.collection_name.update(query,update,upsert,multi)
+		功能：修改文档
+		参数：query 		筛选条件 用法同find
+			 update 	要修改成什么内容 通常配合修改操作符（修改器）使用
+			 upsert 	布尔值，默认是false,如果query没有筛选到文档，则不做任何操作
+			 			设置为true,则如果query没有筛选到文档，则根据query和update内容插入新的文档
+			 multi		布尔值，默认为false,如果有多条符合条件，则文档只修改第一条
+			 			设置为true,则表示修改所有符合条件的文档
+		示例：
+			# 修改‘Tom’的年龄为18，$set修改器
+			>>> db.class0.update({name:'Tom'},{$set:{age:18}})			
+			# 当upsert=true，如果有name=Jame的文档则修改，如果没有则根据query update插入新的文档
+			>>> db.class0.update({name:'Jame'},{$set:{age:16}},true)	
+			# 修改所有年龄小于17的为17
+			>>> db.class0.update({age:{$lt:17}},{$set:{age:17}},false,true)
+
+	修改操作符(修改器)
+		$set 
+			功能1：修改一个域的值
+			>>> db.class0.update({name:'Lucy'},{$set:{age:16}})
+			功能2：增加一个域(当文档中存在时，修改；不存在该域时，增加)
+			>>> db.class0.update({name:'Jame'},{$set:{sex:'m'}})
+		$unset
+			功能：删除一个域
+			>>> db.class0.update({name:'Abby'},{$unset:{sex:''}})
+		$rename
+			功能：修改域的名称
+			>>> db.class0.update({},{$rename:{sex:'gender'}},false,true)
+		$setOnInsert
+			功能：如果使用update插入了文档，则将该修改器内容作为插入文档的一部分
+			>>> db.class0.update({name:'Jim'},{$set:{age:18},$setOnInsert:{gender:'m',tel:'123456'}},true)
+			* 如果插入了新文档，则setOnInsert内容也会作为新文档的一部分
+		$inc
+			功能：加法修改器
+			>>> db.class0.update({},{$inc:{age:1}},false,true)	# 所有年龄加一操作
+		$mul
+			功能：乘法修改器
+			>>> db.class0.update({},{$mul:{age:2}},false,true)	# 所有年龄乘以2操作
+		$min
+			功能：如果筛选文档的指定域值小于min值，则不修改，大于min值，则修改为min值（限定上限）
+			>>> db.class0.update({name:'Mary'},{$min:{age:20}})
+		$max
+			功能：如果筛选文档的指定域值大于max值，则不修改，小于max值，则修改为max值（限定下限）
+			>>> db.class0.update({name:'Lucy'},{$max:{age:18}})
+	数组修改器
+		$push
+			功能：向数组中添加一项
+			>>> db.class1.update({name:'百合'},{$push:{score:83}})
+		$pushAll
+			功能：向数组中添加多项
+			>>> db.class1.update({name:'阿宝'},{$pushAll:{score:[89,91,78]}})
+		$pull
+			功能：从数组中删除一项
+			>>> db.class1.update({name:'阿宝'},{$pull:{score:78}})
+		$pullAll
+			功能：从数组中删除多项
+			>>> db.class1.update({name:'阿宝'},{$pullAll:{score:[56,49]}})
+		$each
+			功能1：对多个值逐个进行操作（分别操作）
+			>>> db.class1.update({name:'阿宝'},{$push:{score:{$each:[99,66]}}})
+			功能2：和其他共同配合使用
+			$position
+				功能：指定插入位置
+				>>> db.class1.update({name:'阿哲'},{$push:{score:{$each:[73],$position:1}}})
+				# 将73插入到数组1号位置
+			$sort
+				功能：数组排序
+				>>> db.class1.update({},{$push:{score:{$each:[],$sort:-1}}},false,true)
+				# 对所有score域的数组元素进行降序排序
+		$pop
+			功能：弹出一项 1表示弹出最后一项，-1弹出第一项
+			>>> db.class1.update({name:'阿宝'},{$pop:{score:1}})
+		$addToSet
+			功能：向数组中添加一项，但是不能添加重复内容
+			>>> db.class1.update({name:'阿宝'},{$addToSet:{score:93}})

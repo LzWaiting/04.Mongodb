@@ -1,0 +1,29 @@
+比较操作符
+	
+	$eq	表示等于
+		e.g.查找年龄等于18
+		>>> db.class0.find({age:{$eq:18}},{_id:0})
+	$lt 表示小于
+		e.g.查找年龄小于18
+		>>> db.class0.find({age:{$lt:18}},{_id:0})
+		* 在mongodb中字符串可以比较大小
+	$lte 小于等于
+		e.g.查找年龄小于等于18
+		>>> db.class0.find({age:{$lte:18}},{_id:0})
+	$gt 表示大于
+		e.g.查找年龄大于16，小于19
+		>>> db.class0.find({age:{$gt:16,$lt:19}},{_id:0})
+		* 在mongodb中所有的{}、[]中都可以写多个条件，根据参数的不同表达的意思不一样
+	$gte 大于等于
+		e.g.查找大于等于19
+		>>> db.class0.find({age:{$gte:19}},{_id:0})
+	$ne 不等于
+		e.g.查找性别不为'm'
+		>>> db.class0.find({sex:{$ne:'m'}},{_id:0})
+		* 使用$ne查找也会找到该域不存在的文档
+	$in 包含
+		e.g.查找在什么内的信息
+		>>> db.class0.find({age:{$in:[17,18]}},{_id:0})
+	$nin 不包含
+		e.g.查找不包含的信息
+		>>> db.class0.find({age:{$nin:[17,19]}},{_id:0})

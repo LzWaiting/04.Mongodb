@@ -1,0 +1,107 @@
+1. 关系型数据库和非关系型数据库各有什么特点
+	
+
+	> 区别:
+	* Nosql不是以关系模型构建的，机构比较自由
+	* Nosql不保障数据的一致性
+	* Nosql弥补了关系型数据库的一些不足，比如高并发，海量数据处理
+	* Nosql读写能力强
+	* Nosql技术还在不断的快速发展，功能没有关系型数据库成熟强大
+
+2. MongoDB是一个什么样的数据库
+	文档型、非关系型数据库
+	创建数据库	>>> use databaseName
+	删除数据库	>>> db.dropDatabase()
+	查看数据库	>>> show dbs
+	
+	创建集合		>>> db.createCollection(collection_name)
+				>>> db.collection_name.insert()
+	删除集合		>>> db.collection_name.drop()
+	集合重命名	>>> db.collection_name.renameCollection('new_name')
+	查看集合		>>> show collections/tables
+
+	数据库的备份	$ mongodump
+
+	文档插入		>>> db.collection_name.insert/insertOne/insertMany/save()
+	查看文档		>>> db.collection_name.find()
+
+3.创建 
+	创建数据 名称 grade
+	>>> use garde
+	创建集合 名称 class
+	>>> db.createCollection('class')
+	集合中插入若干(5-8条)文档 文档格式
+	年龄范围 6-15
+	爱好选择：draw sing dance basketball football pingpong computer 每个同学选择2-5项
+	>>> db.class.insert([
+						{name:'zhangsan',age:10,sex:'m',hobby:['draw','football','computer']},
+						{name:'lisi',age:6,sex:'m',hobby:['football','sing']},
+						{name:'wangwu',age:15,sex:'w',hobby:['sing','dance','pingpong']},
+						{name:'zhaoliu',age:7,sex:'w',hobby:['draw','computer','dance','baskerball']},	
+						{name:'qianqi',age:14,sex:'m',hobby:['basketball','football','pingpong','computer']},
+						{name:'zhongba',age:8,sex:'w',hobby:['draw','sing','dance','computer']},
+						{name:'baijiu',age:13,sex:'m',hobby:['pingpong','basketball','sing']},
+						{name:'jianger',age:11,sex:'w',hobby:['pingpong','sing']},
+						{name:'yanyi',age:17,sex:'w',hobby:['draw','sing','dance','football']}
+						])
+
+4. 查找
+	查看班级所有学生信息
+		>>> db.class.find()
+	查看班级中年龄为8岁的学生信息
+		>>> db.class.find({age:8},{_id:0})
+	查看班级中年龄大于10岁学生信息
+		>>> db.class.find({age:{$gt:10}},{_id:0})
+	查看班级中年龄在8-11岁之间的学生信息
+		>>> db.class.find({age:{$gte:8,$lte:11}},{_id:0})
+		>>> db.class.find({age:{$in:[8,9,10,11]}},{_id:0})
+	查看班级中年龄10岁且为男生的学生信息
+		>>> db.class.find({age:10,sex:'m'},{_id:0})
+		>>> db.class.find({$and:[{age:10},{sex:'m'}]},{_id:0})
+	查看班级中小于7岁或者大于14岁的学生
+		>>> db.class.find({$or:[{age:{$lt:7}},{age:{$gt:14}}]},{_id:0})
+	查看班级中年龄为8岁或者11岁的学生
+		>>> db.class.find({$or:[{age:8},{age:11}]},{_id:0})
+		>>> db.class.find({age:{$in:[8,11]}},{_id:0})
+	找到有两项兴趣爱好的学生
+		>>> db.class.find({hobby:{$size:2}},{_id:0})
+	找到兴趣中有draw的学生
+		>>> db.class.find({hobby:'draw'},{_id:0})
+	找到既喜欢画画又喜欢跳舞的学生
+		>>> db.class.find({hobby:{$all:['draw','dance']}},{_id:0})
+	统计兴趣有4项的学生人数
+		>>> db.class.find({hobby:{$size:4}},{_id:0}).count()
+	找出本班年龄第二大的学生
+		>>> db.class.find({},{_id:0}).sort(age:-1).skip(1).limit(1)
+	查看本班学生兴趣爱好涵盖哪些方面
+		>>> db.class.distinct('hobby')
+	找到年龄最大的三个学生
+		>>> db.class.find({},{_id:0}).sort({age:-1}).limit(3)
+	删除 所有年龄大于16或者小于7岁的学生 除非他的爱好有三项以上
+		>>> db.class.remove({$or:[{age:{$gt:16}},{age:{$lt:7}}],hobby:{$size:1},hobby:{$size:2}},{_id:0})	
+
+5. 数据修改
+	将lisi的年龄改为12岁，兴趣爱好变为跳舞，画画
+	>>> db.class.update({name:'lisi'},{$set:{age:12,hobby:['dance','draw']}})
+	追加zhangsan爱好唱歌
+	>>> db.class.update({name:'zhangsan'},{$push:{hobby:'sing'}})
+	追加wangwu兴趣爱好 吹牛 打篮球
+	>>> db.class.update({name:'wangwu'},{$pushAll:{hobby:['chuiniu','basketball']}})
+	jianger兴趣多了跑步和画画,不重复
+	>>> db.class.update({name:'jianger'},{$addToSet:{hobby:{$each:['draw','running']}}})
+	将班上所有的男生年龄加1
+	>>> db.class.update({sex:'m'},{$inc:{age:1}},false,true)
+	删除yanyi的sex属性
+	>>> db.class.update({name:'yanyi'},{$unset:{sex:''}})
+	修改xiaoliu的年龄为15，如果不存在该同学，则添加，同时要添加兴趣爱好和性别男
+	>>> db.class.update({name:'xiaoliu'},{$setOnInsert:{age:15,sex:'m',hobby:['sing','draw']}},true)
+	删除lisi兴趣中的第一项
+	>>> db.class.update({name:'lisi'},{$pop:{hobby:-1}})
+	删除lisi爱好中的画画和唱歌
+	>>> db.class.update({name:'wangwu'},{$pullAll:{hobby:['draw','sing']}})
+	
+6. 数据库修改，索引，聚合
+
+7. 总结 mongodb 
+
+8. 复习ftp 和 聊天室项目

@@ -1,0 +1,58 @@
+MongoDB基本操作
+
+	MongoDB 使用db方法进行相关操作（小驼峰方法命名）
+		db: mongodb 的全局量，代表当前正在使用的数据库
+		* 如果不选择使用任何数据库，db代表test，直接插入数据就会建立test数据库
+
+	数据库操作:
+
+		mongo 数据库命名规则（严格区分大小写）
+			1. 使用utf-8字符（mongo默认支持utf-8）
+			2. 不能含有空格 . / \ '\0'字符
+			3. 长度不超过64字节
+			4. 不能和系统数据库重名
+
+		创建mongo数据库
+			use databaseName
+			>>> use stu	# 创建一个名字为stu的数据库
+				* use 实际为选择使用哪个数据库，当数据库不存在时会自动创建
+				* use 后并不会立即创建出数据库，而是需要等待插入数据时，数据库才会创建
+		
+		查看系统中的数据库
+			show dbs
+			>>> show dbs
+
+		删除数据库
+			>>> db.dropDatabase()	# 删除db所代表的数据库
+			e.g. >>> use test
+				 >>> db.dropDatabase()	# 删除test数据库
+
+	集合操作:
+
+		集合命名规则
+			1. 合法的utf-8字符
+			2. 不能有'\0'
+			3. 不能以system.开头，因为这是系统保留集合前缀
+			4. 不能和关键字重名
+
+		创建集合
+			方法1：
+			>>> db.createCollection(collection_name)
+			e.g. >>> db.createCollection('class1')
+			
+			方法2：
+			当向一个集合中插入数据的时候，如果集合不存在则自动创建
+			>>> db.collection_name.insert(...)
+			e.g. >>> db.class2.insert({'b':2})
+
+		查看数据库中集合
+			>>> show collections
+			>>> show tables
+
+		删除集合：
+			>>> db.collection_name.drop()
+			e.g. >>> db.class2.drop()	# 删除集合class2
+
+		集合重命名:
+			db.collection_name.renameCollection('new_name')
+			e.g. >>> db.class.renameCollection('class0')	# 将class重命名为class0

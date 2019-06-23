@@ -1,0 +1,18 @@
+数组（Array）的查找
+	查找数组中包含某一条件的元素
+	e.g.只要score数组中包含小于60的元素即可查询过滤
+	>>> db.class1.find({score:{$lt:60}},{_id:0})
+		score数组中包含56的元素也可查询过滤
+	>>> db.class1.find({score:56},{_id:0})
+
+	$all 查找数组同时包含多项的文档
+		e.g.查找包含49和67的元素的文档
+		>>> db.class1.find({score:{$all:[49,67]}},{_id:0})
+	$size 通过数组元素个数查找
+		e.g.查找score中有两个元素的文档
+		>>> db.class1.find({score:{$size:2}},{_id:0})
+	$slice 取数组的部分进行显示，在field中声明
+		e.g.表示显示数组中score的前两项
+		>>> db.class1.find({},{_id:0,score:{$slice:2}})
+		e.g.表示跳过第一项显示后面两项
+		>>> db.class1.find({},{_id:0,score:{$slice:[1,2]}})

@@ -1,0 +1,16 @@
+其他常用查找操作符
+	
+	www.mongodb.com
+	learn --> documentation --> search
+	
+	$exists 通过某个域是否存在筛选（true表示存在，false表示不存在）
+	e.g.查找不存在sex域文档
+	>>> db.class1.find({sex:{$exists:false}},{_id:0})
+
+	$mod 查找域值被除余数
+	e.g.找出年龄为单数的文档
+	>>> db.class1.find({age:{$mod:[2,1]}},{_id:0})
+
+	$type 找出指定数据类型的文档
+	e.g.查找name域值类型为2的文档
+	>>> db.class1.find({name:{$type:2}},{_id:0})

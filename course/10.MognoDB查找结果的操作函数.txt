@@ -1,0 +1,31 @@
+查找结果的操作函数
+
+	db.collection_name.distinct(filed)
+		功能：查看某个域的值范围
+		e.g.获取某个域的值范围，去重
+		>>> db.class0.distinct('name')
+	
+>>>	把查询结果看作是一个对象，有以下方法
+		pretty()
+			功能：格式化显示查询结果
+			>>> db.class0.find().pretty()
+		limit(n)
+			功能：显示前n条结果
+			>>> db.class0.find().limit(3)
+		skip(n)
+			功能：跳过前n条显示后面的查询结果
+			>>> db.class0.find().skip(3)
+		count()
+			功能：统计查询结果数量
+			>>> db.class0.find({sex:'m'},{_id:0}).count()
+			* 统计时需给一定条件
+		sort({field:1/-1})
+			功能：对查找结果排序
+			参数：以键值对表示按照哪个field排序，1表示升序，-1表示降序
+			>>> db.class0.find({},{_id:0}).sort({age:-1})
+			复合排序
+				e.g.年龄相同的按姓名升序排序
+				>>> db.class0.find({},{_id:0}).sort({age:1,name:1})
+		* 函数可以连续调用
+			e.g.年龄最小的前3位同学
+			>>> db.class0.find({},{_id:0}).sort({age:1}).limit(3)
